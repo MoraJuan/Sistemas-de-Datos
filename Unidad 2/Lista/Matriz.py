@@ -72,23 +72,36 @@ class Lista: #Lista Enlazada
             return anterior
 
     def insertar(self,valor,fila,columna):
-        nodo = Nodo(valor,fila,columna)
-       
-        if self.__comienzo == None:
-            self.__comienzo = nodo
+        # Verifica si ya existe un nodo con la misma fila y columna que el nuevo nodo.
+        nodoe = self.buscae(fila, columna)
+        if nodoe is not None:
+            self.__comienzo.setValor(valor)
+
+        #Aca hace el resto de la implementacion
         else:
-            if self.__comienzo.getFila() > fila:
+            nodo = Nodo(valor, fila, columna)
+            if self.__comienzo is None:
+                self.__comienzo = nodo
+            else:
+                if self.__comienzo.getFila() > fila:
                     nodo.setSiguiente(self.__comienzo)
                     self.__comienzo = nodo
-            elif self.__comienzo.getFila() == fila:
+                elif self.__comienzo.getFila() == fila:
                     if self.__comienzo.getColumna() > columna:
                         nodo.setSiguiente(self.__comienzo)
                         self.__comienzo = nodo
-            else:
-                previo = self.anterior(fila,columna)
-                nodo.setSiguiente(previo.getSiguiente())
-                previo.setSiguiente(nodo)
-        self.__tamaño+=1
+                    elif self.__comienzo.getColumna() == columna:
+                        self.__comienzo.setValor(valor)
+                    else:
+                        previo = self.anterior(fila, columna)
+                        nodo.setSiguiente(previo.getSiguiente())
+                        previo.setSiguiente(nodo)
+                else:
+                    previo = self.anterior(fila, columna)
+                    nodo.setSiguiente(previo.getSiguiente())
+                    previo.setSiguiente(nodo)
+            self.__tamaño += 1
+        
     def suprimir(self,valor):
         if self.estaVacia():
             print('Esta Vacia')
@@ -99,6 +112,13 @@ class Lista: #Lista Enlazada
                 previo = self.anterior(valor)
                 sig = self.siguiente(valor)
                 previo.setSiguiente(sig)
+    def buscae(self, valor):
+        nodo = self.__comienzo
+        while nodo is not None:
+            if nodo.getFila() == fila and nodo.getColumna() == columna:
+                return nodo
+            nodo = nodo.getSiguiente()
+        return None
 
     def buscar(self,valor):
         bandera = False
